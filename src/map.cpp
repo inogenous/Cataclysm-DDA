@@ -1811,7 +1811,11 @@ furn_id map::furn( const tripoint_bub_ms p ) const
     if( !inbounds( p ) ) {
         return furn_str_id::NULL_ID();
     }
+    return furn( tripoint_bub_ms_ib{ p.raw() } );
+}
 
+furn_id map::furn( const tripoint_bub_ms_ib p ) const
+{
     point_sm_ms l;
     const submap *const current_submap = unsafe_get_submap_at( p, l );
     if( current_submap == nullptr ) {
@@ -2010,7 +2014,11 @@ ter_id map::ter( const tripoint_bub_ms &p ) const
     if( !inbounds( p ) ) {
         return ter_str_id::NULL_ID().id();
     }
+    return ter( tripoint_bub_ms_ib{ p.raw() } );
+}
 
+ter_id map::ter( const tripoint_bub_ms_ib &p ) const
+{
     point_sm_ms l;
     const submap *const current_submap = unsafe_get_submap_at( p, l );
     if( current_submap == nullptr ) {
@@ -2089,6 +2097,7 @@ uint8_t map::get_known_connections( const tripoint_bub_ms &p,
         if( !inbounds( neighbour ) ) {
             continue;
         }
+        tripoint_bub_ms_ib neighbour_ib { neighbour.raw() };
         const auto neighbour_override = override.find( neighbour );
         const bool neighbour_overridden = neighbour_override != override.end();
         // if there's some non-memory terrain to show at the neighboring tile
@@ -2099,7 +2108,7 @@ uint8_t map::get_known_connections( const tripoint_bub_ms &p,
                                  ( !overridden && ( is_transparent || is_memorized( neighbour.raw() ) ) );
         if( may_connect ) {
             const ter_t &neighbour_terrain = neighbour_overridden ?
-                                             neighbour_override->second.obj() : ter( neighbour ).obj();
+                                             neighbour_override->second.obj() : ter( neighbour_ib ).obj();
             if( neighbour_terrain.in_connect_groups( connect_group ) ) {
                 val += 1 << i;
             }
@@ -6721,7 +6730,11 @@ const field &map::field_at( const tripoint_bub_ms &p ) const
         nulfield = field();
         return nulfield;
     }
+    return field_at( tripoint_bub_ms_ib{ p.raw() } );
+}
 
+const field &map::field_at( const tripoint_bub_ms_ib &p ) const
+{
     point_sm_ms l;
     const submap *const current_submap = unsafe_get_submap_at( p, l );
     if( current_submap == nullptr ) {

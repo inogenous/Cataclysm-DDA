@@ -966,6 +966,7 @@ class map
         // TODO: fix point types (remove the first overload)
         furn_id furn( const tripoint &p ) const;
         furn_id furn( tripoint_bub_ms p ) const;
+        furn_id furn( tripoint_bub_ms_ib p ) const;
         // TODO: Get rid of untyped overload.
         furn_id furn( const point_bub_ms &p ) const {
             return furn( tripoint_bub_ms( p, abs_sub.z() ) );
@@ -1012,6 +1013,7 @@ class map
         // TODO: fix point types (remove the first overload)
         ter_id ter( tripoint p ) const;
         ter_id ter( const tripoint_bub_ms &p ) const;
+        ter_id ter( const tripoint_bub_ms_ib &p ) const;
         // TODO: Get rid of untyped overload.
         ter_id ter( const point &p ) const {
             return ter( tripoint( p, abs_sub.z() ) );
@@ -1815,6 +1817,7 @@ class map
         // TODO: fix point types (remove the first overload)
         const field &field_at( const tripoint &p ) const;
         const field &field_at( const tripoint_bub_ms &p ) const;
+        const field &field_at( const tripoint_bub_ms_ib &p ) const;
         /**
          * Gets fields that are here. Both for querying and edition.
          */
@@ -2399,11 +2402,22 @@ class map
             std::tie( sm, offset_p ) = project_remain<coords::sm>( p );
             return unsafe_get_submap_at( p );
         }
+        submap *unsafe_get_submap_at( const tripoint_bub_ms_ib p, point_sm_ms &offset_p ) {
+            tripoint_bub_sm_ib sm;
+            std::tie( sm, offset_p ) = project_remain<coords::sm>( p );
+            return get_submap_at_grid( sm );
+        }
         const submap *unsafe_get_submap_at(
             const tripoint_bub_ms p, point_sm_ms &offset_p ) const {
             tripoint_bub_sm sm;
             std::tie( sm, offset_p ) = project_remain<coords::sm>( p );
             return unsafe_get_submap_at( p );
+        }
+        const submap *unsafe_get_submap_at(
+            const tripoint_bub_ms_ib p, point_sm_ms &offset_p ) const {
+            tripoint_bub_sm_ib sm;
+            std::tie( sm, offset_p ) = project_remain<coords::sm>( p );
+            return get_submap_at_grid( sm );
         }
         // TODO: Get rid of untyped overload
         submap *get_submap_at( const tripoint &p, point &offset_p ) {
